@@ -1,6 +1,7 @@
 from playwright.sync_api import expect
 
 from pages.base_page import BasePage
+from pages.home_page import HomePage
 from pages.recovery_page import RecoveryPage
 from pages.vk_id_page import VkIdPage
 
@@ -23,12 +24,14 @@ class LoginPage(BasePage):
         self.page.fill(self._PASSWORD, password)
         return self
 
-    def login_as(self, login, password):
-        return self.fill_credentials(login, password).submit()
-
     def submit(self):
         self.page.click(self._SUBMIT)
         return self
+
+    def login_as(self, login, password):
+        """Логин с реальными кредами: после успеха открывается лента."""
+        self.fill_credentials(login, password).submit()
+        return HomePage(self.page).wait_ready()
 
     def error_text(self):
         error = self.page.locator(self._ERROR).first

@@ -10,7 +10,7 @@ def test_login_form_is_displayed(page):
 
 
 def test_wrong_credentials_show_error(page):
-    login_page = LoginPage(page).open().login_as(FAKE_LOGIN, FAKE_PASSWORD)
+    login_page = LoginPage(page).open().fill_credentials(FAKE_LOGIN, FAKE_PASSWORD).submit()
     assert login_page.error_text() == "Неправильно указан логин и/или пароль"
 
 
