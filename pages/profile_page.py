@@ -6,7 +6,7 @@ from pages.base_page import BasePage
 class ProfilePage(BasePage):
     """Страница профиля пользователя."""
 
-    _SETTINGS = "a:has-text('Настройки')"
+    _SETTINGS = "a:has-text('Настройки'):visible"
 
     def __init__(self, page):
         super().__init__(page)

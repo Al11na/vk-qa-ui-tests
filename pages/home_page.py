@@ -5,12 +5,12 @@ from pages.profile_page import ProfilePage
 class HomePage(BasePage):
     """Главная страница залогиненного пользователя (лента)."""
 
-    _OWN_PROFILE = "a.ui_navigation_user_block_link"
+    # ссылка на свой профиль — в DOM есть только у залогиненных
+    _OWN_PROFILE_LINK = "a[hrefattrs='st.cmd=userPage']"
     _POST = "[data-feed-id]"
 
     def wait_ready(self):
-        # ссылка «свой профиль» в шапке есть только у залогиненных
-        self.page.locator(self._OWN_PROFILE).first.wait_for(state="visible")
+        self.page.locator(self._OWN_PROFILE_LINK).first.wait_for(state="attached")
         self.accept_cookies()
         return self
 
@@ -19,11 +19,12 @@ class HomePage(BasePage):
         return self.wait_ready()
 
     def is_logged_in(self):
-        return self.page.locator(self._OWN_PROFILE).count() > 0
+        return self.page.locator(self._OWN_PROFILE_LINK).count() > 0
 
     def posts_count(self):
         return self.page.locator(self._POST).count()
 
     def open_own_profile(self):
-        self.page.locator(self._OWN_PROFILE).first.click()
+        href = self.page.locator(self._OWN_PROFILE_LINK).first.get_attribute("href")
+        self.page.locator(f"a[href='{href}']:visible").first.click()
         return ProfilePage(self.page)
